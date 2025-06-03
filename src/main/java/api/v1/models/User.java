@@ -1,10 +1,11 @@
 package api.v1.models;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import jakarta.validation.constraints.NotBlank;
 
-@JsonAutoDetect
 public class User {
+    @NotBlank(message = "Login cannot be blank")
     private String login;
+    @NotBlank(message = "Login cannot be blank")
     private String password;
 
     public User(String login, String password){

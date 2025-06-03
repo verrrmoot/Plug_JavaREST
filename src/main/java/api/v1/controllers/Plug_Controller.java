@@ -4,6 +4,7 @@ import api.v1.dto.UserDTO;
 import api.v1.models.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,7 +32,7 @@ public class Plug_Controller {
 	}
 
 	@PostMapping(consumes = "application/json", produces = "application/json")
-	public ResponseEntity<UserDTO> postJson(@RequestBody User user) {
+	public ResponseEntity<UserDTO> postJson(@Valid @RequestBody User user) {
 		response_time();
 		String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		UserDTO userDTO = new UserDTO(user.getLogin(), user.getPassword(), date);
