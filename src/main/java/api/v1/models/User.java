@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 public class User {
     @NotBlank(message = "Login cannot be blank")
     private String login;
-    @NotBlank(message = "Login cannot be blank")
+    @NotBlank(message = "Password cannot be blank")
     private String password;
 
     public User(String login, String password){

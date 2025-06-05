@@ -20,16 +20,28 @@ import java.util.*;
 @RequestMapping("/plug")
 public class Plug_Controller {
 
-	@Autowired
-	public ObjectMapper objectMapper;
-
 	@GetMapping(produces = "application/json")
-	public ResponseEntity<UserDTO> getJson() {
+	public ResponseEntity<UserDTO> getJson(@RequestParam String login) {
 		response_time();
-		User user = new User("Login1", "Password1");
-		UserDTO userDTO = new UserDTO(user.getLogin(), "OK");
-		return new ResponseEntity<>(userDTO, HttpStatus.OK);
+		if ("Login1".equalsIgnoreCase(login)) {
+			String status = HttpStatus.OK.getReasonPhrase();
+			UserDTO userDTO = new UserDTO(login, status);
+			return new ResponseEntity<>(userDTO, HttpStatus.OK);
+		} else {
+			String status = HttpStatus.NOT_FOUND.getReasonPhrase();
+			UserDTO userDTO = new UserDTO(login, status);
+			return new ResponseEntity<>(userDTO, HttpStatus.NOT_FOUND);
+		}
 	}
+
+
+//	@GetMapping(produces = "application/json")
+//	public ResponseEntity<UserDTO> getJson() {
+//		response_time();
+//		User user = new User("Login1", "Password1");
+//		UserDTO userDTO = new UserDTO(user.getLogin(), "OK");
+//		return new ResponseEntity<>(userDTO, HttpStatus.OK);
+//	}
 
 	@PostMapping(consumes = "application/json", produces = "application/json")
 	public ResponseEntity<UserDTO> postJson(@Valid @RequestBody User user) {
