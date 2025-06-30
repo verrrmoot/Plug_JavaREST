@@ -1,5 +1,6 @@
 package api.v1.dao;
 
+import api.v1.exceptions.SelectException;
 import api.v1.models.User;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +14,7 @@ public class DataBaseWorker {
     private static final String USER = "verrrmoot";
     private static final String PASSWORD = "verrrmoot";
 
-    public User select(String login){
+    public User select(String login) throws SelectException {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
@@ -31,10 +32,12 @@ public class DataBaseWorker {
                         resultSet.getString("email"),
                         new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(resultSet.getTimestamp("date").getTime()))
                 );
+            } else if (user == null) {
+                throw new SelectException("User " + login + " not found");
             }
         }
         catch (SQLException e){
-            System.out.println("Error with select user " + e.getMessage());
+            System.out.println("Error with connection " + e.getMessage());
             e.printStackTrace();
         }
         finally {

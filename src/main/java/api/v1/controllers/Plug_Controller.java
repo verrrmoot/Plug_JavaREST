@@ -1,6 +1,7 @@
 package api.v1.controllers;
 
 import api.v1.dao.DataBaseWorker;
+import api.v1.exceptions.SelectException;
 import api.v1.models.User;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +32,10 @@ public class Plug_Controller {
 		response_time();
 		try {
 			User user = dbw.select(login);
-			if (user == null){
-				throw new RuntimeException("User " + login + " not found");
-			}
-
 			String json = "{\"login\":\"" + user.getLogin() + "\",\"status\":\"ok\"}";
 			return new ResponseEntity<>(json, HttpStatus.OK);
 		}
-		catch (Exception e){
+		catch (SelectException e){
 			String json = "{\"login\":\"" + login + "\",\"status\":\"" + e.getMessage() + "\"}";
 			return new ResponseEntity<>(json, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
