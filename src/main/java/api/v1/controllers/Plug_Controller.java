@@ -1,6 +1,7 @@
 package api.v1.controllers;
 
 import api.v1.dao.DataBaseWorker;
+import api.v1.dao.FileWorker;
 import api.v1.exceptions.SelectException;
 import api.v1.models.User;
 import jakarta.validation.Valid;
@@ -22,9 +23,11 @@ import java.util.*;
 public class Plug_Controller {
 
 	private final DataBaseWorker dbw;
+	private final FileWorker fileWorker;
 	@Autowired
-	public Plug_Controller(DataBaseWorker dbw){
+	public Plug_Controller(DataBaseWorker dbw, FileWorker fileWorker){
 		this.dbw = dbw;
+		this.fileWorker = fileWorker;
 	}
 
 	@GetMapping(produces = "application/json")
@@ -32,12 +35,26 @@ public class Plug_Controller {
 		response_time();
 		try {
 			User user = dbw.select(login);
+			fileWorker.writefile(user);
 			String json = "{\"login\":\"" + user.getLogin() + "\",\"status\":\"ok\"}";
 			return new ResponseEntity<>(json, HttpStatus.OK);
 		}
 		catch (SelectException e){
 			String json = "{\"login\":\"" + login + "\",\"status\":\"" + e.getMessage() + "\"}";
 			return new ResponseEntity<>(json, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping(path = "/random", produces = "application/json")
+	public ResponseEntity<String> getRandom() {
+		response_time();
+		try {
+			String randomJSON = fileWorker.readfile();
+			return new ResponseEntity<>(randomJSON, HttpStatus.OK);
+		}
+		catch (Exception e){
+			String randomJSON = "{\"error\":\"" +  e.getMessage() + "\"}";
+			return new ResponseEntity<>(randomJSON, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
