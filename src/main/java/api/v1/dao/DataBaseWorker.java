@@ -59,6 +59,7 @@ public class DataBaseWorker {
         int inserts = 0;
 
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)){
+            connection.setAutoCommit(false);
 
             try (PreparedStatement psauth = connection.prepareStatement(sqlauth);
                 PreparedStatement psemail = connection.prepareStatement(sqlemail)){
@@ -72,11 +73,16 @@ public class DataBaseWorker {
                 psemail.setString(2, user.getLogin());
                 inserts += psemail.executeUpdate();
 
+                connection.commit();
             }catch (SQLException e){
+                connection.rollback();
                 System.out.println("Error with insert " + e.getMessage());
                 inserts = 0;
                 throw new SelectException("Error with insert " + e.getMessage());
             }
+//            finally {
+//                connection.setAutoCommit(true);
+//            }
         }
         catch (SQLException e){
             System.out.println("Error connection " + e.getMessage());
