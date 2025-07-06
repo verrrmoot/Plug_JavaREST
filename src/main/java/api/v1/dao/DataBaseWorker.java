@@ -53,12 +53,13 @@ public class DataBaseWorker {
         return user;
     }
 
-    public int insert(User user){
+    public int insert(User user) throws SelectException {
         String sqlauth = "INSERT INTO users_auth VALUES (?, ?, ?)";
         String sqlemail = "INSERT INTO users_emails VALUES (?, ?)";
         int inserts = 0;
 
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)){
+
             try (PreparedStatement psauth = connection.prepareStatement(sqlauth);
                 PreparedStatement psemail = connection.prepareStatement(sqlemail)){
 
@@ -74,6 +75,7 @@ public class DataBaseWorker {
             }catch (SQLException e){
                 System.out.println("Error with insert " + e.getMessage());
                 inserts = 0;
+                throw new SelectException("Error with insert " + e.getMessage());
             }
         }
         catch (SQLException e){

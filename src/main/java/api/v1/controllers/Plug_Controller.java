@@ -46,8 +46,14 @@ public class Plug_Controller {
 		response_time();
 		String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		user.setDate(date);
-		dbw.insert(user);
-		return new ResponseEntity<>(user, HttpStatus.OK);
+		try {
+			dbw.insert(user);
+			return new ResponseEntity<>(user, HttpStatus.OK);
+		}
+		catch (SelectException e){
+			String json = "{\"login\":\"" + user.getLogin() + "\",\"status\":\"" + e.getMessage() + "\"}";
+			return new ResponseEntity<>(json, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	public void response_time(){
