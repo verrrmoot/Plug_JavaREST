@@ -67,8 +67,8 @@ public class DataBaseWorker {
                 psauth.setTimestamp(3, Timestamp.valueOf(user.getDate()));
                 inserts += psauth.executeUpdate();
 
-                psemail.setString(1, user.getLogin());
-                psemail.setString(2, user.getEmail());
+                psemail.setString(1, user.getEmail());
+                psemail.setString(2, user.getLogin());
                 inserts += psemail.executeUpdate();
 
             }catch (SQLException e){
