@@ -80,9 +80,6 @@ public class DataBaseWorker {
                 inserts = 0;
                 throw new SelectException("Error with insert " + e.getMessage());
             }
-//            finally {
-//                connection.setAutoCommit(true);
-//            }
         }
         catch (SQLException e){
             System.out.println("Error connection " + e.getMessage());
